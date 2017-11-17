@@ -176,19 +176,30 @@ For every image, the model has high confidence in its predictions. The top 5 pro
 
 ![alt text][image6]
 ![alt text][image7]
+
 We can see the CNN prioritizing the round shape, with arrow in th middle.
+
 ![alt text][image8]
 ![alt text][image9]
+
 We can see the CNN prioritizing the hexagon shape, with stop lettering in th middle.
+
 ![alt text][image10]
 ![alt text][image11]
+
 We can see the CNN prioritizing the round shape, with straight arrow in th middle.
+
 ![alt text][image12]
 ![alt text][image13]
+
 We can see the CNN prioritizing the arrow in the sign and it picks up some roundness.
+
 ![alt text][image14]
 ![alt text][image15]
+
 We can see the CNN prioritizing the triangle shape, and some random pixels in the middle.
+
 ![alt text][image16]
 ![alt text][image17]
+
 We can see the CNN prioritizing identifying the round shape, but also the rectangles of the sign. In the second convolution the round shape looks more like the edges of the diamond.
