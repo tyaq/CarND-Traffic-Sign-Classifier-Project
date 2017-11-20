@@ -3,7 +3,7 @@
 **Build a Traffic Sign Recognition Project**
 
 The goals / steps of this project are the following:
-* Load the data set (see below for links to the project data set)
+* Load the data set ([Download Link](https://d17h27t6h515a5.cloudfront.net/topher/2017/February/5898cd6f_traffic-signs-data/traffic-signs-data.zip))
 * Explore, summarize and visualize the data set
 * Design, train and test a model architecture
 * Use the model to make predictions on new images
@@ -43,8 +43,7 @@ You're reading it! and here is a link to my [project code](https://github.com/ty
 
 #### 1. Provide a basic summary of the data set.
 
-I used the numpy library to calculate summary statistics of the traffic
-signs data set:
+I used the numpy library to calculate summary statistics of the [GTSRB](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset) data set:
 
 * The size of training set is 34799
 * The size of the validation set is 4410
@@ -52,7 +51,7 @@ signs data set:
 * The shape of a traffic sign image is 32x32 with 3 color channels (32, 32, 3)
 * The number of unique classes/labels in the data set is 43
 
-####2. Include an exploratory visualization of the dataset.
+#### 2. Include an exploratory visualization of the dataset.
 
 Here is an exploratory visualization of the training set. It is a sample of every sign class.
 
@@ -66,7 +65,7 @@ These classes are unevenly distributed throughout the training and validation se
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique.
 
-The images are pre-processed by converting them into YUV from RGB using OpenCV. Then the Y-channel(gamma) is extracted, and considered as a grayscale representation of the image. This image is then normalized to occupy the full 0-255 value scale using OpenCV's histogram normalize function. The end result is a grayscale dataset where every image's contrast is the same. Their difference in luminance is the same no image will be too light or too bright.
+The images are pre-processed by converting them into YUV from RGB using OpenCV. Then the Y-channel(gamma) is extracted, and considered as a grayscale representation of the image. This image is then normalized to occupy the full 0-255 value scale using OpenCV's histogram normalize function. The end result is a grayscale dataset where every image's contrast is the same. Their difference in luminance is the same, no image will be too light or too bright.
 
 Here is an example of a traffic sign image before and after this process.
 
@@ -107,19 +106,19 @@ To train the model, I used the Adam optimizer, a batch size of 128, and 60 epoch
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of 0.984
-* validation set accuracy of 0.941 
-* test set accuracy of 0.918
+* training set accuracy of 0.979
+* validation set accuracy of 0.945 
+* test set accuracy of 0.910
 
 These are found in input cell 10 in the IPython notebook.
 
 I opted to use the LeNet architectures from the MNIST lab to bootstrap this project. I first ran it on the traffic signs without tuning the hyperparameters.
 This resulted in a validation accuracy around ~89% with test accuracy of 96%. This showed me that LeNet was overfitting the data. So I introduced dropout, initially this was done at every activation, but I found ~91% validation accuracy by only dropping out data in the fully connected layers. I then read [Yann Lechun's paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) on this problem and noticed he reached better accuracy by converting to grayscale.
 Though his neural net architecture was different this transformation of the data should help my neural net focus better on shapes. This provided a nice incremental improvement to ~94% validation accuracy, with ~98% testing acccuracy. The gap was only 4% in the overftting problem.
-Since I was already working on the image processing aspect I decided now would be great opportunity to even out my classes frequency graph. Having some prominent classes was skewing the model towards predicting them more often.So I generated new data, by randomly augmenting images in the lower frequency classes. The augmentations included rotating, scaling, and skewing the images. This however led to underfitting and I'm still uncertain as to why. I then shifted my focus to tuning the hyperparameters, this was done by increasing and decreasing the parameters until they provided better validation accuracy. 
+Since I was already working on the image processing aspect I decided now would be great opportunity to even out my classes frequency graph. Having some prominent classes was skewing the model towards predicting them more often. So I generated new data, by randomly augmenting images in the lower frequency classes. The augmentations included rotating, scaling, and skewing the images. This however led to underfitting and I'm still uncertain as to why. I then shifted my focus to tuning the hyperparameters, this was done by increasing and decreasing the parameters until they provided better validation accuracy. 
 Most of them remained unchanged, but I saw significant gains, by setting the sigma used in tf.truncated_normals to 0.01. At this point I realized that I should change my architecture to get better results. However faced with having to change the architecture and rerunning these experiments, I decided to put an end to this tweaking. 
 
-I decided my model was good enough. The model definitely overfits, but a with a test accuracy of 92% it is accurate enough to identify my supplied signs.
+I decided my model was good enough. The model definitely overfits, but a with a test accuracy of 91% it is accurate enough to identify my supplied signs.
  
 
 ### Test a Model on New Images
@@ -132,9 +131,9 @@ Here are six German traffic signs that I found using Google StreetView in Nuremb
 
 The first three images(Turn Left,Stop, Go Straight or Right) should all be pretty easy to classify because they are taken face on and in the day time.
 
-However the third image(No Parking on Right) should be difficult to classify because this sign is no where in our data set. I threw it in because it is a real sign in Germany and I wanted to see if the net prioritizes the arrow, cross, or round shape.
+However the fourth image(No Parking on Right) should be difficult to classify because this sign is no where in our data set. I threw it in because it is a real sign in Germany and I wanted to see if the net prioritizes the arrow, cross, or round shape.
 
-Also, the fourth image(Right of Way Ahead) might be difficult because the picture was taken in a shadow. However our preprocessing should solve that problem.
+Also, the fifth image(Right of Way Ahead) might be difficult because the picture was taken in a shadow. However our preprocessing should solve that problem.
 
 The sixth image(Speed Limit 30km/h) might be difficult because in this city speed limit signs are posted on rectangles, not circles like in our data set.
 
@@ -149,12 +148,12 @@ Here are the results of the prediction:
 | Turn Left Ahead  		| Turn Left Ahead   							| 
 | Stop    		       	| Stop 	    									|
 | Go Straight or Right 	| Go Straight or Right   						|
-| No Parking on Right	| Keep Right									|
+| No Parking on Right	| Speed limit (80km/h)							|
 | Right of Way Ahead	| Right of Way Ahead			 				|
-| Speed Limit 30km/h	| Priority Road      							|
+| Speed Limit (30km/h)	| Animal Crossing      							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs in the test set, which gives an accuracy of 80%. This compares worse to the accuracy on the test set of 92%. However the speed limit sign is kind of a gotcha question, because it is a rectangle while the training was on round. I am surprised that it predicts priority road, a diagonal sign, with 90% confidence. The correct answer only has 1% confidence.
+The model was able to correctly guess 4 of the 5 traffic signs in the test set, which gives an accuracy of 80%. This compares worse to the accuracy on the test set of 91%. However the speed limit sign is kind of a gotcha question, because it is a rectangle while the training was on round signs. I am surprised that it predicts animal crossing, a triangle sign, with 58% confidence. The correct answer is not even in the top 5 softmax probabilities.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability.
 
@@ -164,12 +163,12 @@ For every image, the model has high confidence in its predictions. The top 5 pro
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| 1               		| Turn Left Ahead   							| 
+| 0.99             		| Turn Left Ahead   							| 
 | 1        		       	| Stop 	    									|
-| 0.95               	| Go Straight or Right   						|
-| 0.90                 	| Keep Right									|
-| 0.95              	| Right of Way Ahead			 				|
-| 0.94              	| Priority Road      							|
+| 1                    	| Go Straight or Right   						|
+| 0.64                 	| Speed limit (80km/h)							|
+| 1                   	| Right of Way Ahead			 				|
+| 0.58              	| Animal Crossing      							|
 
 ### Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
@@ -202,4 +201,4 @@ We can see the CNN prioritizing the triangle shape, and some random pixels in th
 ![alt text][image16]
 ![alt text][image17]
 
-We can see the CNN prioritizing identifying the round shape, but also the rectangles of the sign. In the second convolution the round shape looks more like the edges of the diamond.
+We can see the CNN prioritizing identifying the round shape, but also the straight edges of the sign. In the second convolution the round shape looks more like the edges of the triangle.
